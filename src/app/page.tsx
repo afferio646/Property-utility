@@ -1,146 +1,218 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDemo } from "@/contexts/DemoContext";
 import Link from "next/link";
-import { FaPlus, FaChevronRight } from "react-icons/fa";
+import { FaPlus, FaCamera, FaImage } from "react-icons/fa";
 
 export default function Home() {
   const { properties, addProperty, userRole } = useDemo();
+
+  // Modal State
+  const [showAddForm, setShowAddForm] = useState(false);
   const [newPropName, setNewPropName] = useState("");
   const [newPropAddress, setNewPropAddress] = useState("");
-  const [showAddForm, setShowAddForm] = useState(false);
+  const [newPropImage, setNewPropImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // In a real app, we would upload this to a server/CDN.
+      // Here, we use a local object URL to mock it immediately.
+      const url = URL.createObjectURL(file);
+      setNewPropImage(url);
+    }
+  };
 
   const handleAddProperty = (e: React.FormEvent) => {
     e.preventDefault();
     if (newPropName.trim()) {
-      addProperty(newPropName, newPropAddress);
+      addProperty(
+        newPropName,
+        newPropAddress,
+        newPropImage || "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=600&h=400" // Default fallback image
+      );
+
+      // Reset form
       setNewPropName("");
       setNewPropAddress("");
+      setNewPropImage(null);
       setShowAddForm(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-black text-gray-200">
+    <div className="min-h-screen bg-[#0b101e] text-gray-200 font-sans">
       <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Header Section */}
-        <header className="mb-10 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center sm:items-end gap-6 border-b border-gray-800 pb-6">
-          <div>
-            <h1 className="text-3xl font-extrabold text-white tracking-tight">Active Properties</h1>
-            <p className="text-sm text-gray-400 mt-2 max-w-2xl">
-              Select a property below to view its associated trades, track project progress, and review field photos and checklists.
-            </p>
+        <header className="mb-12 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+          <div className="flex items-center gap-4">
+            {/* Logo placeholder - styling similar to the Goldmorr 'G' */}
+            <div className="w-12 h-12 bg-yellow-500 rounded-md flex items-center justify-center text-[#0b101e] font-bold text-2xl tracking-tighter shrink-0">
+              PM
+            </div>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-white tracking-widest uppercase mb-1">
+                <span className="text-yellow-500">Facility</span> Property Utility
+              </h1>
+              <p className="text-xs sm:text-sm text-gray-400 uppercase tracking-wider">
+                Manage your active properties and trades
+              </p>
+            </div>
           </div>
+
           {userRole === "manager" && (
             <button
-              onClick={() => setShowAddForm(!showAddForm)}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              onClick={() => setShowAddForm(true)}
+              className="flex items-center gap-2 bg-transparent border border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white px-5 py-2.5 rounded text-sm font-bold tracking-wider uppercase transition-colors"
             >
-              <FaPlus size={14} /> Add Property
+              <FaPlus size={12} /> New Property
             </button>
           )}
         </header>
 
-        {/* Add Property Form */}
-        {showAddForm && userRole === "manager" && (
-          <form onSubmit={handleAddProperty} className="mb-10 bg-[#111111] p-6 rounded-lg border border-gray-800 shadow-2xl max-w-lg">
-            <h2 className="text-lg font-semibold text-white mb-4">Register New Property</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs text-gray-400 mb-1">Project Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g., Summit Renovation"
-                  className="w-full bg-black border border-gray-700 text-white p-3 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition text-sm"
-                  value={newPropName}
-                  onChange={(e) => setNewPropName(e.target.value)}
-                  required
-                />
+        {/* Section Subtitle */}
+        <div className="mb-6 border-b border-gray-800 pb-2">
+          <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Properties</h2>
+        </div>
+
+        {/* Properties Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {properties.map((prop) => (
+            <div key={prop.id} className="bg-[#151b2b] rounded-xl overflow-hidden shadow-lg border border-gray-800 flex flex-col hover:border-gray-600 transition-colors duration-300">
+              {/* Property Image */}
+              <div className="h-48 w-full bg-gray-900 relative">
+                {prop.imageUrl ? (
+                  <img
+                    src={prop.imageUrl}
+                    alt={prop.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-700">
+                    <FaImage size={48} />
+                  </div>
+                )}
               </div>
-              <div>
-                <label className="block text-xs text-gray-400 mb-1">Address</label>
-                <input
-                  type="text"
-                  placeholder="e.g., 123 Mountain View Rd"
-                  className="w-full bg-black border border-gray-700 text-white p-3 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition text-sm"
-                  value={newPropAddress}
-                  onChange={(e) => setNewPropAddress(e.target.value)}
-                />
+
+              {/* Property Details */}
+              <div className="p-5 flex-1 flex flex-col">
+                <h3 className="text-lg font-bold text-white mb-1 truncate" title={prop.name}>{prop.name}</h3>
+                <p className="text-sm text-gray-400 mb-6 truncate" title={prop.address}>{prop.address || "No address provided"}</p>
+
+                <div className="mt-auto">
+                  <Link
+                    href={`/properties/${prop.id}`}
+                    className="block w-full text-center bg-transparent border border-gray-600 hover:border-blue-500 hover:text-blue-400 text-gray-300 py-2.5 rounded text-sm font-bold tracking-wider uppercase transition-colors"
+                  >
+                    Property Trades
+                  </Link>
+                </div>
               </div>
-              <div className="flex gap-3 justify-end pt-2">
+            </div>
+          ))}
+        </div>
+
+        {/* Empty State */}
+        {properties.length === 0 && (
+          <div className="text-center py-20 bg-[#151b2b] rounded-xl border border-dashed border-gray-800 mt-8">
+            <p className="text-gray-400 text-sm tracking-wide">No properties registered yet.</p>
+          </div>
+        )}
+
+        {/* Add Property Modal */}
+        {showAddForm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/80 backdrop-blur-sm">
+            <div className="bg-[#151b2b] w-full max-w-md rounded-xl border border-gray-700 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+              <div className="p-6 border-b border-gray-800">
+                <h2 className="text-lg font-bold text-white uppercase tracking-widest">Register New Property</h2>
+              </div>
+
+              <div className="p-6 overflow-y-auto">
+                <form id="add-property-form" onSubmit={handleAddProperty} className="space-y-5">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Property Name</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Wing B, Room 204"
+                      className="w-full bg-[#0b101e] border border-gray-700 text-white px-4 py-3 rounded focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition text-sm"
+                      value={newPropName}
+                      onChange={(e) => setNewPropName(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Address / Location</label>
+                    <input
+                      type="text"
+                      placeholder="Optional details..."
+                      className="w-full bg-[#0b101e] border border-gray-700 text-white px-4 py-3 rounded focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition text-sm"
+                      value={newPropAddress}
+                      onChange={(e) => setNewPropAddress(e.target.value)}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Property Image</label>
+
+                    {newPropImage ? (
+                      <div className="relative w-full h-40 rounded border border-gray-700 overflow-hidden group">
+                        <img src={newPropImage} alt="Preview" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                          <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="bg-gray-800 text-white px-4 py-2 rounded text-sm font-medium hover:bg-gray-700"
+                          >
+                            Change Image
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="w-full h-32 flex flex-col items-center justify-center gap-2 border border-dashed border-gray-600 rounded bg-[#0b101e] hover:bg-gray-800 hover:border-gray-500 transition-colors text-gray-400"
+                      >
+                        <FaCamera size={24} />
+                        <span className="text-xs uppercase tracking-wider font-bold">Select Photo</span>
+                      </button>
+                    )}
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      className="hidden"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                    />
+                  </div>
+                </form>
+              </div>
+
+              <div className="p-6 border-t border-gray-800 bg-[#0f1423] flex justify-end gap-3 shrink-0">
                 <button
                   type="button"
-                  onClick={() => setShowAddForm(false)}
-                  className="px-4 py-2 text-sm text-gray-400 hover:text-white transition"
+                  onClick={() => {
+                    setShowAddForm(false);
+                    setNewPropName("");
+                    setNewPropAddress("");
+                    setNewPropImage(null);
+                  }}
+                  className="px-5 py-2.5 text-sm font-bold tracking-wider uppercase text-gray-400 hover:text-white transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-500 transition shadow-lg"
+                  form="add-property-form"
+                  className="px-6 py-2.5 bg-yellow-500 text-[#0b101e] text-sm font-bold tracking-wider uppercase rounded hover:bg-yellow-400 transition"
                 >
                   Save Property
                 </button>
               </div>
             </div>
-          </form>
-        )}
-
-        {/* Property List (Horizontal Cards) */}
-        <div className="flex flex-col gap-4">
-          {properties.map((prop, index) => {
-            // Pick a consistent pseudo-random house image for the demo
-            const houseImage = `https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600&h=400`;
-
-            return (
-              <Link href={`/properties/${prop.id}`} key={prop.id} className="block group">
-                <div className="bg-white rounded-xl overflow-hidden hover:shadow-lg transition duration-300 shadow-sm flex items-center p-4 border border-gray-100">
-                  {/* Property Cover Image (Thumbnail) */}
-                  <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-lg overflow-hidden bg-gray-200 shrink-0">
-                    <img
-                      src={index % 2 === 0 ? houseImage : `https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=600&h=400`}
-                      alt={prop.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  {/* Property Info */}
-                  <div className="ml-4 flex-1 min-w-0">
-                    <h2 className="text-base sm:text-lg font-bold text-gray-900 truncate">{prop.name}</h2>
-                    {prop.address && (
-                      <p className="text-xs sm:text-sm text-gray-500 truncate mt-0.5">
-                        {prop.address}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Property Actions */}
-                  <div className="ml-4 shrink-0 flex items-center gap-4">
-                     <div className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 text-xs font-bold">
-                       JD
-                     </div>
-                     <button className="text-sm text-blue-600 font-medium group-hover:text-blue-800 transition-colors px-3 py-1.5 rounded-md hover:bg-blue-50">
-                        Edit
-                     </button>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-
-        {properties.length === 0 && (
-          <div className="text-center py-20 bg-[#111111] rounded-lg border border-dashed border-gray-800 mt-8">
-            <p className="text-gray-400 text-sm">No properties registered yet.</p>
-            {userRole === "manager" && (
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="mt-4 text-blue-500 text-sm font-medium hover:text-blue-400 transition"
-              >
-                + Add your first property
-              </button>
-            )}
           </div>
         )}
       </div>

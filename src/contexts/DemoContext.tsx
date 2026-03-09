@@ -40,13 +40,14 @@ export interface Property {
   name: string;
   address: string;
   createdAt: string;
+  imageUrl?: string;
 }
 
 interface DemoContextType {
   userRole: UserRole;
   setUserRole: (role: UserRole) => void;
   properties: Property[];
-  addProperty: (name: string, address?: string) => void;
+  addProperty: (name: string, address?: string, imageUrl?: string) => void;
   photos: Photo[];
   addPhoto: (propertyId: string, trade: TradeType, url: string) => void;
   updatePhotoStatus: (photoId: string, status: PhotoStatus) => void;
@@ -60,8 +61,8 @@ const DemoContext = createContext<DemoContextType | undefined>(undefined);
 
 // Initial Demo Data
 const initialProperties: Property[] = [
-  { id: "1", name: "123 Main St - Full Reno", address: "123 Main St", createdAt: new Date().toISOString() },
-  { id: "2", name: "456 Oak Avenue", address: "456 Oak Ave", createdAt: new Date().toISOString() },
+  { id: "1", name: "123 Main St - Full Reno", address: "123 Main St", createdAt: new Date().toISOString(), imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600&h=400" },
+  { id: "2", name: "456 Oak Avenue", address: "456 Oak Ave", createdAt: new Date().toISOString(), imageUrl: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=600&h=400" },
 ];
 
 const mockPhotoUrls = [
@@ -115,11 +116,12 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
   const [properties, setProperties] = useState<Property[]>(initialProperties);
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
 
-  const addProperty = (name: string, address = "") => {
+  const addProperty = (name: string, address = "", imageUrl = "") => {
     const newProp: Property = {
       id: Date.now().toString(),
       name,
       address,
+      imageUrl,
       createdAt: new Date().toISOString(),
     };
     setProperties([...properties, newProp]);
