@@ -20,6 +20,7 @@ export type PhotoStatus = "Work to be Done" | "Work Started" | "Work Completed";
 
 export interface Note {
   id: string;
+  createdAt: string;
   text: string;
   completed: boolean;
   completedDate: string | null;
@@ -84,8 +85,8 @@ const initialPhotos: Photo[] = [
     url: mockPhotoUrls[0],
     status: "Work to be Done",
     notes: [
-      { id: "n1", text: "Check main water valve for leaks", completed: false, completedDate: null, authorId: "user1" },
-      { id: "n1b", text: "Replace corroded copper section", completed: false, completedDate: null, authorId: "user1" }
+      { id: "n1", text: "Check main water valve for leaks", completed: false, createdAt: new Date().toISOString(), completedDate: null, authorId: "user1" },
+      { id: "n1b", text: "Replace corroded copper section", completed: false, createdAt: new Date().toISOString(), completedDate: null, authorId: "user1" }
     ]
   },
   {
@@ -95,8 +96,8 @@ const initialPhotos: Photo[] = [
     url: mockPhotoUrls[1],
     status: "Work Started",
     notes: [
-      { id: "n2a", text: "Remove old trap", completed: true, completedDate: new Date().toISOString(), authorId: "user1" },
-      { id: "n2b", text: "Install new PVC piping", completed: false, completedDate: null, authorId: "user1" }
+      { id: "n2a", text: "Remove old trap", completed: true, createdAt: new Date().toISOString(), completedDate: new Date().toISOString(), authorId: "user1" },
+      { id: "n2b", text: "Install new PVC piping", completed: false, createdAt: new Date().toISOString(), completedDate: null, authorId: "user1" }
     ]
   },
   {
@@ -106,8 +107,8 @@ const initialPhotos: Photo[] = [
     url: mockPhotoUrls[2],
     status: "Work Completed",
     notes: [
-      { id: "n3a", text: "Installed new sink and faucet", completed: true, completedDate: new Date().toISOString(), authorId: "user1" },
-      { id: "n3b", text: "Tested for leaks - passed", completed: true, completedDate: new Date().toISOString(), authorId: "user1" }
+      { id: "n3a", text: "Installed new sink and faucet", completed: true, createdAt: new Date().toISOString(), completedDate: new Date().toISOString(), authorId: "user1" },
+      { id: "n3b", text: "Tested for leaks - passed", completed: true, createdAt: new Date().toISOString(), completedDate: new Date().toISOString(), authorId: "user1" }
     ]
   },
   {
@@ -117,8 +118,8 @@ const initialPhotos: Photo[] = [
     url: mockPhotoUrls[3],
     status: "Work to be Done",
     notes: [
-      { id: "n4a", text: "Label breaker box", completed: false, completedDate: null, authorId: "user1" },
-      { id: "n4b", text: "Run new 220v line for dryer", completed: false, completedDate: null, authorId: "user1" }
+      { id: "n4a", text: "Label breaker box", completed: false, createdAt: new Date().toISOString(), completedDate: null, authorId: "user1" },
+      { id: "n4b", text: "Run new 220v line for dryer", completed: false, createdAt: new Date().toISOString(), completedDate: null, authorId: "user1" }
     ]
   }
 ];
@@ -159,6 +160,7 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
     const newNote: Note = {
       id: Date.now().toString(),
       text,
+      createdAt: new Date().toISOString(),
       completed: false,
       completedDate: null,
       authorId: "current_user",
