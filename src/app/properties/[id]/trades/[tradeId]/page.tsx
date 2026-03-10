@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useDemo, TradeType } from "@/contexts/DemoContext";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import {
   FaArrowLeft,
@@ -11,7 +12,6 @@ import {
   FaTrash,
   FaPencilAlt,
   FaPlus,
-  FaEllipsisV,
   FaFileInvoice
 } from "react-icons/fa";
 
@@ -222,10 +222,12 @@ export default function TradeDetailView() {
 
                     {/* Far Left: Small Picture Thumbnail */}
                     <div className="h-48 lg:h-32 w-full lg:w-48 rounded-md overflow-hidden bg-gray-200 shrink-0 mb-4 lg:mb-0 border border-gray-300 shadow-inner relative">
-                      <img
+                      <Image
                         src={photo.url}
                         alt={`Task Photo`}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 192px"
                       />
                       {/* Inner shadow overlay for 3D picture frame effect */}
                       <div className="absolute inset-0 shadow-[inset_0_2px_8px_rgba(0,0,0,0.2)] pointer-events-none"></div>

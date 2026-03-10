@@ -4,9 +4,10 @@ import { useState, useRef } from "react";
 import { useDemo } from "@/contexts/DemoContext";
 import Link from "next/link";
 import { FaPlus, FaCamera, FaImage } from "react-icons/fa";
+import Image from "next/image";
 
 export default function Home() {
-  const { properties, addProperty, userRole, setUserRole, photos, updatePropertyName } = useDemo();
+  const { properties, addProperty, userRole, photos, updatePropertyName } = useDemo();
 
   // Modal State
   const [showAddForm, setShowAddForm] = useState(false);
@@ -151,10 +152,12 @@ export default function Home() {
               {/* Property Image */}
               <div className="h-36 w-full bg-gray-200 relative border-b-2 border-gray-200">
                 {prop.imageUrl ? (
-                  <img
+                  <Image
                     src={prop.imageUrl}
                     alt={prop.name}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -245,7 +248,7 @@ export default function Home() {
 
                     {newPropImage ? (
                       <div className="relative w-full h-40 rounded border border-gray-700 overflow-hidden group">
-                        <img src={newPropImage} alt="Preview" className="w-full h-full object-cover" />
+                        <Image src={newPropImage} alt="Preview" fill className="object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                           <button
                             type="button"

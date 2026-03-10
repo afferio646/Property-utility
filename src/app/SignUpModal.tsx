@@ -2,14 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import { useDemo, UserRole } from "@/contexts/DemoContext";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { Suspense } from "react";
 
 function SignUpModalContent() {
-  const { currentUser, setCurrentUser, addUser, setUserRole } = useDemo();
+  const { addUser } = useDemo();
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
   const [role, setRole] = useState<UserRole>("none");
@@ -21,8 +20,10 @@ function SignUpModalContent() {
   useEffect(() => {
     const roleParam = searchParams.get("role");
     if (roleParam && (roleParam === "manager" || roleParam === "lead" || roleParam === "technician")) {
-      setRole(roleParam as UserRole);
-      setIsOpen(true);
+      setTimeout(() => {
+        setRole(roleParam as UserRole);
+        setIsOpen(true);
+      }, 0);
 
       // Remove param from URL cleanly without reloading
       const url = new URL(window.location.href);

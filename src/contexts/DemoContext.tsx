@@ -141,7 +141,7 @@ const initialPhotos: Photo[] = [
 export const DemoProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
-  const [userRole, setUserRole] = useState<UserRole>("none"); // derived or fallback
+  const [userRole, setUserRole] = useState<UserRole>("manager"); // derived or fallback
   const [properties, setProperties] = useState<Property[]>(initialProperties);
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
 
