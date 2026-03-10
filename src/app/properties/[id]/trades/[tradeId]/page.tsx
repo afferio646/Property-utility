@@ -9,6 +9,7 @@ import {
   FaCheckCircle,
   FaRegCircle,
   FaTrash,
+  FaPencilAlt,
   FaPlus,
   FaEllipsisV,
   FaFileInvoice
@@ -24,6 +25,7 @@ export default function TradeDetailView() {
     addNote,
     toggleNote,
     deleteNote,
+    editNote,
     userRole
   } = useDemo();
 
@@ -54,8 +56,39 @@ export default function TradeDetailView() {
     }).toLowerCase();
   };
 
+
   // Track new note text per photo card
   const [newNotes, setNewNotes] = useState<{ [key: string]: string }>({});
+
+  // Editing state: { photoId: string, noteId: string } or null
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editingText, setEditingText] = useState("");
+
+  const startEditing = (noteId: string, currentText: string) => {
+    setEditingNoteId(noteId);
+    setEditingText(currentText);
+  };
+
+  const cancelEditing = () => {
+    setEditingNoteId(null);
+    setEditingText("");
+  };
+
+  const saveEdit = (photoId: string, noteId: string) => {
+    if (editingText.trim()) {
+      editNote(photoId, noteId, editingText.trim());
+    }
+    cancelEditing();
+  };
+
+  const handleEditKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, photoId: string, noteId: string) => {
+    if (e.key === 'Enter') {
+      saveEdit(photoId, noteId);
+    } else if (e.key === 'Escape') {
+      cancelEditing();
+    }
+  };
+
 
   if (!property) {
     return (
@@ -232,24 +265,53 @@ export default function TradeDetailView() {
                                 >
                                   {note.completed ? <FaCheckCircle size={16} /> : <FaRegCircle size={16} />}
                                 </button>
-                                <span className={`text-sm font-medium truncate ${note.completed ? "text-gray-400 line-through" : "text-gray-800"}`}>
-                                  {note.text}
-                                </span>
+
+                                {editingNoteId === note.id ? (
+                                  <div className="flex-1 flex gap-2 w-full">
+                                    <input
+                                      type="text"
+                                      autoFocus
+                                      className="flex-1 bg-white border border-blue-400 text-gray-900 text-sm px-2 py-0.5 rounded shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition w-full"
+                                      value={editingText}
+                                      onChange={(e) => setEditingText(e.target.value)}
+                                      onKeyDown={(e) => handleEditKeyDown(e, photo.id, note.id)}
+                                      onBlur={() => saveEdit(photo.id, note.id)}
+                                    />
+                                  </div>
+                                ) : (
+                                  <span
+                                    className={`text-sm font-medium truncate flex-1 cursor-pointer ${note.completed ? "text-gray-400 line-through" : "text-gray-800 hover:text-blue-600 transition-colors"}`}
+                                    onClick={() => startEditing(note.id, note.text)}
+                                    title="Click to edit task"
+                                  >
+                                    {note.text}
+                                  </span>
+                                )}
                               </div>
 
-                              <div className="flex items-center gap-3 self-end sm:self-auto shrink-0 pl-7 sm:pl-0">
+                              <div className="flex items-center gap-2 self-end sm:self-auto shrink-0 pl-7 sm:pl-0">
                                 <div className="text-[10px] text-gray-500 whitespace-nowrap flex flex-row gap-2">
                                   <span>Start: {formatDate(note.createdAt)}</span>
                                   {note.completed && note.completedDate && (
                                     <span>Completed: {formatDate(note.completedDate)}</span>
                                   )}
                                 </div>
-                                <button
-                                  onClick={() => deleteNote(photo.id, note.id)}
-                                  className="text-gray-300 hover:text-red-500 p-0.5 opacity-0 group-hover/note:opacity-100 transition-opacity"
-                                >
-                                  <FaTrash size={12} />
-                                </button>
+                                <div className="flex items-center gap-1 opacity-0 group-hover/note:opacity-100 transition-opacity">
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); startEditing(note.id, note.text); }}
+                                    className="text-gray-300 hover:text-blue-500 p-1"
+                                    title="Edit task"
+                                  >
+                                    <FaPencilAlt size={12} />
+                                  </button>
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); deleteNote(photo.id, note.id); }}
+                                    className="text-gray-300 hover:text-red-500 p-1"
+                                    title="Delete task"
+                                  >
+                                    <FaTrash size={12} />
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           ))}
