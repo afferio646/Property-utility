@@ -193,7 +193,7 @@ export default function TradeDetailView() {
             <p className="text-gray-500 text-sm">Upload photos to start creating task checklists.</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
             {tradePhotos.map((photo) => {
               const completedNotes = photo.notes.filter(n => n.completed).length;
               const totalNotes = photo.notes.length;
@@ -219,10 +219,10 @@ export default function TradeDetailView() {
 
               return (
                 <div key={photo.id} className="bg-gradient-to-b from-gray-200 to-gray-400 p-[2px] rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
-                  <div className="bg-gradient-to-b from-white to-gray-50 rounded-md overflow-hidden flex flex-col sm:flex-row items-stretch sm:items-center p-2 h-full relative border border-white/60">
+                  <div className="bg-gradient-to-b from-white to-gray-50 rounded-md overflow-hidden flex flex-col p-2 h-full relative border border-white/60">
 
                     {/* Far Left: Small Picture Thumbnail */}
-                    <div className="h-32 sm:h-20 w-full sm:w-28 rounded overflow-hidden bg-gray-200 shrink-0 mb-2 sm:mb-0 border border-gray-300 shadow-inner relative group/photo">
+                    <div className="h-40 w-full rounded overflow-hidden bg-gray-200 shrink-0 mb-3 border border-gray-300 shadow-inner relative group/photo">
                       <Image
                         src={photo.url}
                         alt={`Task Photo`}
@@ -272,9 +272,9 @@ export default function TradeDetailView() {
 
                       {/* Checklist */}
                       {photo.notes.length > 0 && (
-                        <div className="mt-0.5 space-y-0.5 max-h-[80px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+                        <div className="mt-2 space-y-0.5 max-h-[120px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                           {photo.notes.map((note) => (
-                            <div key={note.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-0.5 sm:gap-2 group/note p-1 hover:bg-gray-100 rounded transition-colors w-full">
+                            <div key={note.id} className="flex flex-col justify-between gap-1 group/note p-1.5 hover:bg-gray-100 rounded transition-colors w-full border-b border-gray-100 last:border-0">
                               <div className="flex items-start gap-1.5 flex-1 min-w-0">
                                 <button
                                   onClick={() => toggleNote(photo.id, note.id)}
