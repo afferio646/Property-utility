@@ -14,6 +14,7 @@ function SignUpModalContent() {
   const [role, setRole] = useState<UserRole>("none");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
   const [selectedTrades, setSelectedTrades] = useState<string[]>([]);
 
@@ -46,11 +47,11 @@ function SignUpModalContent() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !company) return;
+    if (!name || !email || !phone || !company) return;
 
     // Default role if opened manually
     const finalRole = role !== "none" ? role : "manager";
-    addUser(name, email, company, finalRole, selectedTrades as any[]);
+    addUser(name, email, phone, company, finalRole, selectedTrades as string[]);
     setStep(2);
   };
 
@@ -111,6 +112,17 @@ function SignUpModalContent() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-500"
                   placeholder="john@example.com"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Phone Number</label>
+                <input
+                  type="tel"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-500"
+                  placeholder="555-0198"
                 />
               </div>
               <div>

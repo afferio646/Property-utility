@@ -78,43 +78,45 @@ export default function Dashboard() {
             <div className="text-xs text-[#9ca3af]">Total: {contractors.length} Active</div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {allTrades.map(trade => {
               // Find contractors who selected this trade (or have no trades selected yet for backward compatibility)
               const tradeContractors = contractors.filter(c => c.trades?.includes(trade) || (!c.trades?.length && trade === "plumbing"));
                return (
-                <div key={trade} className="overflow-hidden border border-[#4b5563] rounded h-fit flex flex-col bg-[#1f2937]">
-                  <div className="bg-[#4b5563] p-1.5 border-b border-[#374151]">
-                    <h3 className="font-bold text-[10px] uppercase tracking-wider">{trade}</h3>
+                <div key={trade} className="overflow-hidden border border-[#4b5563] rounded min-h-[120px] flex flex-col bg-[#1f2937]">
+                  <div className="bg-[#4b5563] p-2 border-b border-[#374151]">
+                    <h3 className="font-bold text-xs uppercase tracking-wider">{trade}</h3>
                   </div>
-                  <div className="flex-1">
-                    <ul className="flex flex-col text-xs">
+                  <div className="flex-1 p-2">
+                    <ul className="flex flex-col gap-2">
                       {tradeContractors.length === 0 ? (
-                        <li className="p-2 text-center text-[#9ca3af] italic bg-[#374151]/50 text-[10px]">
+                        <li className="p-3 text-center text-[#9ca3af] italic bg-[#374151]/50 text-xs rounded border border-[#374151]">
                           No contractors
                         </li>
                       ) : tradeContractors.map(c => {
-                        // Check if this contractor has any active alerts anywhere in the system
-                        const activeAlertPhoto = photos.find(p => p.hasAlert && p.contractorId === c.id);
+                        // Check if this contractor has any active alerts in this specific trade category
+                        const activeAlertPhoto = photos.find(p => p.hasAlert && p.contractorId === c.id && p.trade === trade);
                         const hasActiveAlert = !!activeAlertPhoto;
 
                         return (
-                          <li key={c.id} className={`flex items-center justify-between p-2 border-b border-[#4b5563] last:border-0 transition ${hasActiveAlert ? "bg-red-900/20" : "hover:bg-[#4b5563]/30"}`}>
-                            <div className="flex flex-col min-w-0 pr-2">
-                              <span className="font-medium truncate text-[11px]">{c.name}</span>
-                              <span className="text-[9px] text-[#9ca3af] truncate">{c.company}</span>
+                          <li key={c.id} className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-2 rounded border border-[#4b5563] transition gap-2 ${hasActiveAlert ? "bg-red-900/20 border-red-800" : "bg-[#374151]/30 hover:bg-[#374151]/60"}`}>
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 min-w-0 flex-1">
+                              <span className="font-bold text-xs">{c.company}</span>
+                              <span className="text-xs text-[#d1d5db] font-medium">{c.name}</span>
+                              <span className="text-[10px] text-[#9ca3af]">{c.email}</span>
+                              {c.phone && <span className="text-[10px] text-[#9ca3af] font-mono">{c.phone}</span>}
                             </div>
-                            <div className="shrink-0">
+                            <div className="shrink-0 self-end sm:self-center mt-1 sm:mt-0">
                               {hasActiveAlert ? (
                                 <Link
                                   href={`/properties/${activeAlertPhoto.propertyId}/trades/${activeAlertPhoto.trade}`}
-                                  className="inline-flex items-center justify-center gap-1 px-1.5 py-0.5 bg-red-600 hover:bg-red-500 text-white rounded text-[9px] font-bold border border-red-500 shadow-[0_0_10px_rgba(220,38,38,0.7)] transition-all animate-pulse"
+                                  className="inline-flex items-center justify-center gap-1 px-2 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-[10px] font-bold border border-red-500 shadow-[0_0_10px_rgba(220,38,38,0.7)] transition-all animate-pulse"
                                   title="View Alert"
                                 >
-                                  <FaExclamationTriangle size={8} /> ALERT
+                                  <FaExclamationTriangle size={10} /> ALERT
                                 </Link>
                               ) : (
-                                <span className="inline-block px-1.5 py-0.5 bg-[#10b981]/20 text-[#10b981] rounded text-[9px] font-bold border border-[#10b981]/50">
+                                <span className="inline-block px-2 py-1 bg-[#10b981]/20 text-[#10b981] rounded text-[10px] font-bold border border-[#10b981]/50">
                                   CLEAR
                                 </span>
                               )}
