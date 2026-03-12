@@ -9,6 +9,7 @@ export default function ManageUsersModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [company, setCompany] = useState("");
   const [role, setRole] = useState<UserRole>("technician");
 
@@ -30,14 +31,15 @@ export default function ManageUsersModal() {
   const resetForm = () => {
     setName("");
     setEmail("");
+    setPhone("");
     setCompany("");
     setRole("technician");
   };
 
   const handleAddUser = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name && email && company && role) {
-      addUser(name, email, company, role);
+    if (name && email && phone && company && role) {
+      addUser(name, email, phone, company, role);
       resetForm();
     }
   };
@@ -87,6 +89,16 @@ export default function ManageUsersModal() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      className="w-full bg-[#111827] border border-[#374151] rounded p-2 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1 text-gray-300">Phone</label>
+                    <input
+                      type="tel"
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
                       className="w-full bg-[#111827] border border-[#374151] rounded p-2 text-white focus:ring-2 focus:ring-blue-500 outline-none"
                     />
                   </div>

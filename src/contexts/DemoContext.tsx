@@ -9,6 +9,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  phone: string;
   company: string;
   role: UserRole;
   trades?: TradeType[]; // Specific to technicians/contractors
@@ -63,7 +64,7 @@ interface DemoContextType {
   currentUser: User | null;
   setCurrentUser: (user: User | null) => void;
   users: User[];
-  addUser: (name: string, email: string, company: string, role: UserRole, trades?: TradeType[]) => void;
+  addUser: (name: string, email: string, phone: string, company: string, role: UserRole, trades?: TradeType[]) => void;
   userRole: UserRole;
   setUserRole: (role: UserRole) => void;
   updatePropertyName: (propertyId: string, name: string) => void;
@@ -157,8 +158,8 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
   const [properties, setProperties] = useState<Property[]>(initialProperties);
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
 
-  const addUser = (name: string, email: string, company: string, role: UserRole, trades?: TradeType[]) => {
-    const newUser: User = { id: Date.now().toString(), name, email, company, role, trades: trades || [] };
+  const addUser = (name: string, email: string, phone: string, company: string, role: UserRole, trades?: TradeType[]) => {
+    const newUser: User = { id: Date.now().toString(), name, email, phone, company, role, trades: trades || [] };
     setUsers([...users, newUser]);
     if (true) {
         setCurrentUser(newUser);
