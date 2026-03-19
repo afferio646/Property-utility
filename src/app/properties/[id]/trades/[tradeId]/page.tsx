@@ -156,9 +156,9 @@ export default function TradeDetailView() {
             </button>
           </div>
 
-          <div className="w-full max-w-5xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pb-20">
+          <div className="w-full max-w-5xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-20 shrink-0 h-max">
             {galleryImages.map((imgUrl, index) => (
-              <div key={index} className="relative aspect-video w-full rounded-lg overflow-hidden border border-gray-700 shadow-lg bg-gray-900">
+              <div key={index} className="relative aspect-video w-full rounded-lg overflow-hidden border border-gray-700 shadow-lg bg-gray-900 shrink-0">
                 <Image
                   src={imgUrl}
                   alt={`Gallery Image ${index + 1}`}
@@ -308,12 +308,12 @@ export default function TradeDetailView() {
                     )}
 
                     {/* Far Left: Small Picture Thumbnail */}
-                    <div className="h-24 sm:h-32 w-full rounded overflow-hidden bg-gray-200 shrink-0 mb-2 border border-gray-300 shadow-inner relative group/photo">
+                    <div className="h-24 sm:h-32 w-full rounded overflow-hidden bg-black shrink-0 mb-2 border border-gray-300 shadow-inner relative group/photo flex items-center justify-center">
                       <Image
                         src={photo.url}
                         alt={`Task Photo`}
                         fill
-                        className="object-cover"
+                        className="object-contain"
                         sizes="(max-width: 768px) 100vw, 112px"
                         unoptimized
                       />
