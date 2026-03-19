@@ -313,7 +313,7 @@ export default function TradeDetailView() {
                         src={photo.url}
                         alt={`Task Photo`}
                         fill
-                        className="object-contain"
+                        className="object-cover"
                         sizes="(max-width: 768px) 100vw, 112px"
                         unoptimized
                       />
