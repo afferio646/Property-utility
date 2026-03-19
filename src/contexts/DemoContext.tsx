@@ -122,8 +122,7 @@ const mockGalleryUrls = [
   "https://images.unsplash.com/photo-1616423640778-28d1b53229bd?auto=format&fit=crop&q=80&w=800&h=600",
   "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=800&h=600",
   "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=800&h=600",
-  "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&q=80&w=800&h=600",
-  "https://images.unsplash.com/photo-1610056156382-36a5b6424ffc?auto=format&fit=crop&q=80&w=800&h=600"
+  "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&q=80&w=800&h=600"
 ];
 
 const initialPhotos: Photo[] = [
