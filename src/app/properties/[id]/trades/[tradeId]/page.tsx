@@ -15,7 +15,9 @@ import {
   FaPlus,
   FaFileInvoice,
   FaExclamationTriangle,
-  FaTools
+  FaTools,
+  FaImages,
+  FaTimes
 } from "react-icons/fa";
 
 export default function TradeDetailView() {
@@ -24,6 +26,7 @@ export default function TradeDetailView() {
     properties,
     photos,
     addPhoto,
+    addPhotoToGallery,
     updatePhotoStatus,
     deletePhoto,
     toggleAlert,
@@ -46,7 +49,7 @@ export default function TradeDetailView() {
 
   const [newPhotoUrl, setNewPhotoUrl] = useState("");
   const [showAddPhoto, setShowAddPhoto] = useState(false);
-
+  const [selectedGalleryPhotoId, setSelectedGalleryPhotoId] = useState<string | null>(null);
 
   // Format Date Helper
   const formatDate = (isoString: string | null) => {
@@ -133,8 +136,43 @@ export default function TradeDetailView() {
     setNewNotes({ ...newNotes, [photoId]: text });
   };
 
+  const selectedGalleryPhoto = photos.find(p => p.id === selectedGalleryPhotoId);
+  const galleryImages = selectedGalleryPhoto ? [selectedGalleryPhoto.url, ...(selectedGalleryPhoto.galleryUrls || [])] : [];
+
   return (
-    <div className="min-h-screen bg-[#0b101e] text-gray-200 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#0b101e] text-gray-200 flex flex-col font-sans relative">
+      {/* Image Gallery Modal */}
+      {selectedGalleryPhotoId && selectedGalleryPhoto && (
+        <div className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-start p-4 overflow-y-auto">
+          <div className="w-full max-w-5xl flex justify-between items-center mb-6 sticky top-0 z-10 bg-black/80 p-2 rounded backdrop-blur">
+            <h2 className="text-xl font-bold text-white uppercase tracking-widest">
+              Task Photos ({galleryImages.length})
+            </h2>
+            <button
+              onClick={() => setSelectedGalleryPhotoId(null)}
+              className="bg-gray-800 hover:bg-gray-700 text-white rounded-full p-2 border border-gray-600 transition-colors"
+            >
+              <FaTimes size={16} />
+            </button>
+          </div>
+
+          <div className="w-full max-w-5xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pb-20">
+            {galleryImages.map((imgUrl, index) => (
+              <div key={index} className="relative aspect-video w-full rounded-lg overflow-hidden border border-gray-700 shadow-lg bg-gray-900">
+                <Image
+                  src={imgUrl}
+                  alt={`Gallery Image ${index + 1}`}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  unoptimized
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="bg-[#0b101e] border-b border-gray-800 p-4 shrink-0 z-10 sticky top-0 shadow-lg">
         <div className="max-w-7xl mx-auto">
@@ -283,26 +321,41 @@ export default function TradeDetailView() {
                       <div className="absolute inset-0 shadow-[inset_0_1px_4px_rgba(0,0,0,0.1)] pointer-events-none"></div>
 
                       {/* Hover Overlay with Add Photo Button */}
-                      {!property.isArchived && (
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/photo:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 z-10 backdrop-blur-[1px]">
-                           <label
-                             className="bg-white/90 hover:bg-white text-gray-900 rounded-full p-2 shadow-lg hover:scale-110 transition-transform flex items-center justify-center cursor-pointer"
-                             title="Add additional photo"
-                           >
-                             <input
-                               type="file"
-                               accept="image/*,capture=camera"
-                               className="hidden"
-                               onChange={(e) => {
-                                 const file = e.target.files?.[0];
-                                 if (file) alert("Photo selected: " + file.name + ". In a full app, this would append the photo to this task card.");
-                               }}
-                             />
-                             <FaPlus size={10} />
-                           </label>
-                           <span className="text-[8px] font-bold text-white uppercase tracking-wider pointer-events-none">Add Photo</span>
-                        </div>
-                      )}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/photo:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 z-10 backdrop-blur-[1px]">
+                        {!property.isArchived && (
+                           <div className="flex flex-col items-center gap-1">
+                             <label
+                               className="bg-white/90 hover:bg-white text-gray-900 rounded-full p-2 shadow-lg hover:scale-110 transition-transform flex items-center justify-center cursor-pointer"
+                               title="Add additional photo"
+                             >
+                               <input
+                                 type="file"
+                                 accept="image/*,capture=camera"
+                                 className="hidden"
+                                 onChange={(e) => {
+                                   const file = e.target.files?.[0];
+                                   if (file) {
+                                      const localUrl = URL.createObjectURL(file);
+                                      addPhotoToGallery(photo.id, localUrl);
+                                   }
+                                 }}
+                               />
+                               <FaPlus size={10} />
+                             </label>
+                             <span className="text-[8px] font-bold text-white uppercase tracking-wider pointer-events-none">Add Photo</span>
+                           </div>
+                        )}
+
+                        <button
+                          onClick={() => setSelectedGalleryPhotoId(photo.id)}
+                          className="bg-blue-600/90 hover:bg-blue-500 text-white rounded px-2 py-1 flex items-center gap-1.5 shadow hover:scale-105 transition-all"
+                        >
+                          <FaImages size={10} />
+                          <span className="text-[8px] font-bold uppercase tracking-wider">
+                            Photos ({1 + (photo.galleryUrls?.length || 0)})
+                          </span>
+                        </button>
+                      </div>
                     </div>
 
                     {/* Center: Notes & Checkmarks */}

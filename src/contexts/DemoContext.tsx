@@ -40,6 +40,7 @@ export interface Photo {
   propertyId: string;
   trade: TradeType;
   url: string;
+  galleryUrls?: string[]; // Extra photos for this task card
   status: PhotoStatus;
   timestamp?: string;
   notes: Note[];
@@ -83,6 +84,7 @@ interface DemoContextType {
   togglePropertyArchive: (propertyId: string) => void;
   photos: Photo[];
   addPhoto: (propertyId: string, trade: TradeType, url: string) => void;
+  addPhotoToGallery: (photoId: string, url: string) => void;
   deletePhoto: (photoId: string) => void;
   updatePhotoStatus: (photoId: string, status: PhotoStatus) => void;
   toggleAlert: (photoId: string, note?: string) => void;
@@ -115,12 +117,22 @@ const mockPhotoUrls = [
   "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=800&h=600", // Electrical panel
 ];
 
+const mockGalleryUrls = [
+  "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=800&h=600",
+  "https://images.unsplash.com/photo-1616423640778-28d1b53229bd?auto=format&fit=crop&q=80&w=800&h=600",
+  "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=800&h=600",
+  "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=800&h=600",
+  "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&q=80&w=800&h=600",
+  "https://images.unsplash.com/photo-1610056156382-36a5b6424ffc?auto=format&fit=crop&q=80&w=800&h=600"
+];
+
 const initialPhotos: Photo[] = [
   {
     id: "p1",
     propertyId: "1",
     trade: "plumbing",
     url: mockPhotoUrls[0],
+    galleryUrls: mockGalleryUrls,
     status: "Work to be Done",
     notes: [
       { id: "n1", text: "Check main water valve for leaks", completed: false, createdAt: new Date().toISOString(), completedDate: null, authorId: "user1" },
@@ -294,6 +306,18 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
     setPhotos([...photos, newPhoto]);
   };
 
+  const addPhotoToGallery = (photoId: string, url: string) => {
+    setPhotos(photos.map(p => {
+      if (p.id === photoId) {
+        return {
+          ...p,
+          galleryUrls: [...(p.galleryUrls || []), url]
+        };
+      }
+      return p;
+    }));
+  };
+
   const deletePhoto = (photoId: string) => {
     setPhotos(photos.filter(p => p.id !== photoId));
   };
@@ -435,6 +459,7 @@ export const DemoProvider = ({ children }: { children: ReactNode }) => {
         addCustomTrade,
         photos,
         addPhoto,
+        addPhotoToGallery,
         deletePhoto,
         updatePhotoStatus,
         toggleAlert,
