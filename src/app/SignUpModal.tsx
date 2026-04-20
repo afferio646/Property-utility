@@ -45,21 +45,36 @@ function SignUpModalContent() {
 
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Add a timeout promise to prevent hanging indefinitely
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Network timeout: Firebase request took too long.")), 15000)
+      );
+
+      const userCredential = await Promise.race([
+        createUserWithEmailAndPassword(auth, email, password),
+        timeoutPromise
+      ]) as import("firebase/auth").UserCredential;
+
       const user = userCredential.user;
 
-      await setDoc(doc(db, "users", user.uid), {
-        name,
-        email,
-        phone,
-        company,
-        role,
-        trades: role === "contractor" ? selectedTrades : [],
-        createdAt: new Date().toISOString()
-      });
+      await Promise.race([
+        setDoc(doc(db, "users", user.uid), {
+          name,
+          email,
+          phone,
+          company,
+          role,
+          trades: role === "contractor" ? selectedTrades : [],
+          createdAt: new Date().toISOString()
+        }),
+        timeoutPromise
+      ]);
 
+      // If we reach here, successful creation
       setIsOpen(false);
+      window.location.reload(); // Force reload to trigger auth state change and context updates
     } catch (err: unknown) {
+      console.error("Firebase Auth/Firestore Error:", err);
       if (err instanceof Error) {
         setError(err.message || "Failed to create an account.");
       } else {
