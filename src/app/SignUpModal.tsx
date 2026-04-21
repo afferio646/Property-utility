@@ -108,7 +108,7 @@ function SignUpModalContent() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-2 py-2">
-      <div className="bg-white text-black p-4 md:p-5 rounded-lg w-full max-w-sm shadow-2xl relative max-h-[95vh] overflow-y-auto hide-scrollbar">
+      <div className="bg-white text-black p-3 md:p-4 rounded-lg w-full max-w-sm shadow-2xl relative">
         <button
           onClick={() => {
             setIsOpen(false);
@@ -119,113 +119,113 @@ function SignUpModalContent() {
           &times;
         </button>
 
-        <h2 className="text-lg font-bold mb-3 text-center uppercase tracking-wider">Sign Up</h2>
+        <h2 className="text-base font-bold mb-2 text-center uppercase tracking-wider">Sign Up</h2>
 
-        {error && <p className="text-red-500 text-xs mb-2 text-center">{error}</p>}
+        {error && <p className="text-red-500 text-[10px] mb-1 text-center">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="space-y-2" autoComplete="off">
+        <form onSubmit={handleSubmit} className="space-y-1.5" autoComplete="off">
           <div>
-            <label className="block text-xs font-bold mb-0.5 uppercase tracking-wider text-gray-700">Select Role</label>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value as UserRole)}
-                className="w-full border border-gray-300 rounded p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                autoComplete="off"
-              >
-                <option value="none" disabled>Select a role...</option>
-                <option value="manager">Manager</option>
-                <option value="contractor">Contractor</option>
-              </select>
-            </div>
+            <label className="block text-[10px] font-bold mb-0.5 uppercase tracking-wider text-gray-700">Select Role</label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value as UserRole)}
+              className="w-full border border-gray-300 rounded px-2 py-1 text-[11px] md:text-xs focus:ring-2 focus:ring-blue-500"
+              autoComplete="off"
+            >
+              <option value="none" disabled>Select a role...</option>
+              <option value="manager">Manager</option>
+              <option value="contractor">Contractor</option>
+            </select>
+          </div>
 
           {role === "manager" && (
-             <div>
-               <label className="block text-xs font-bold mb-0.5 uppercase tracking-wider text-gray-700">Manager Access Code</label>
-               <input
-                 type="password"
-                 required
-                 value={managerCode}
-                 onChange={(e) => setManagerCode(e.target.value)}
-                 className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500"
-                 placeholder="Enter access code"
-                 autoComplete="new-password"
-               />
-             </div>
+            <div>
+              <label className="block text-[10px] font-bold mb-0.5 uppercase tracking-wider text-gray-700">Manager Access Code</label>
+              <input
+                type="password"
+                required
+                value={managerCode}
+                onChange={(e) => setManagerCode(e.target.value)}
+                className="w-full border border-gray-300 rounded px-2 py-1 text-[11px] md:text-xs focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter access code"
+                autoComplete="new-password"
+              />
+            </div>
           )}
 
           <div>
-            <label className="block text-xs font-bold mb-0.5 uppercase tracking-wider text-gray-700">Full Name</label>
+            <label className="block text-[10px] font-bold mb-0.5 uppercase tracking-wider text-gray-700">Full Name</label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded px-2 py-1 text-[11px] md:text-xs focus:ring-2 focus:ring-blue-500"
               placeholder="John Doe"
               autoComplete="name"
             />
           </div>
           <div>
-            <label className="block text-xs font-bold mb-0.5 uppercase tracking-wider text-gray-700">Email Address</label>
+            <label className="block text-[10px] font-bold mb-0.5 uppercase tracking-wider text-gray-700">Email Address</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded px-2 py-1 text-[11px] md:text-xs focus:ring-2 focus:ring-blue-500"
               placeholder="john@example.com"
               autoComplete="off"
               name="signup-email-prevent-autofill"
             />
           </div>
           <div>
-             <label className="block text-xs font-bold mb-0.5 uppercase tracking-wider text-gray-700">Password</label>
-             <input
-               type="password"
-               required
-               value={password}
-               onChange={(e) => setPassword(e.target.value)}
-               className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500"
-               placeholder="••••••••"
-               autoComplete="new-password"
-             />
-           </div>
+            <label className="block text-[10px] font-bold mb-0.5 uppercase tracking-wider text-gray-700">Password</label>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-gray-300 rounded px-2 py-1 text-[11px] md:text-xs focus:ring-2 focus:ring-blue-500"
+              placeholder="••••••••"
+              autoComplete="new-password"
+            />
+          </div>
           <div>
-            <label className="block text-xs font-bold mb-0.5 uppercase tracking-wider text-gray-700">Phone Number</label>
+            <label className="block text-[10px] font-bold mb-0.5 uppercase tracking-wider text-gray-700">Phone Number</label>
             <input
               type="tel"
               required
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded px-2 py-1 text-[11px] md:text-xs focus:ring-2 focus:ring-blue-500"
               placeholder="555-0198"
               autoComplete="tel"
             />
           </div>
           <div>
-            <label className="block text-xs font-bold mb-0.5 uppercase tracking-wider text-gray-700">Company</label>
+            <label className="block text-[10px] font-bold mb-0.5 uppercase tracking-wider text-gray-700">Company</label>
             <input
               type="text"
               required
               value={company}
               onChange={(e) => setCompany(e.target.value)}
-              className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded px-2 py-1 text-[11px] md:text-xs focus:ring-2 focus:ring-blue-500"
               placeholder="ACME Corp"
               autoComplete="organization"
             />
           </div>
 
           {role === "contractor" && (
-            <div className="pt-2 border-t border-gray-200 mt-1 space-y-1">
+            <div className="pt-1.5 border-t border-gray-200 mt-1 space-y-1">
               <div>
-                <label className="block text-[10px] font-bold mb-0.5 uppercase tracking-wider text-blue-600">Select Your Trade Categories</label>
-                <div className="flex flex-wrap gap-1">
+                <label className="block text-[9px] font-bold mb-0.5 uppercase tracking-wider text-blue-600">Select Your Trade Categories</label>
+                <div className="flex flex-wrap gap-0.5">
                   {allTrades.map(trade => (
                     <button
                       key={trade}
                       type="button"
                       onClick={() => toggleTrade(trade)}
-                      className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase transition-colors border ${
+                      className={`px-1.5 py-0.5 rounded-full text-[9px] font-bold uppercase transition-colors border ${
                         selectedTrades.includes(trade)
                           ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
                           : 'bg-gray-100 text-gray-600 border-gray-300 hover:border-gray-400'
@@ -242,7 +242,7 @@ function SignUpModalContent() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-2.5 rounded uppercase tracking-wider mt-4 transition-colors"
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-1.5 text-xs rounded uppercase tracking-wider mt-2 transition-colors"
           >
             {loading ? "Signing up..." : "Complete Sign Up"}
           </button>
